@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Settings Control</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .blocked {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .unblocked {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .toggle-btn {
+            background: #4e73df;
+            color: white;
+            width: 100%;
+        }
+
+        .otp-btn {
+            background: #36b9cc;
+            color: white;
+        }
+
+        .verify-btn {
+            background: #1cc88a;
+            color: white;
+        }
+
+        input {
+            padding: 8px;
+            width: 80%;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        #msg {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>Settings Control</h2>
+
+    <div class="status {{ state }}">
+        {{ state.upper() }}
+    </div>
+
+    <button class="toggle-btn" onclick="toggle()">Toggle Settings</button>
+
+    <div id="otpBox" style="display:none;">
+        <button class="otp-btn" onclick="sendOTP()">Send OTP</button><br>
+
+        <input id="otp" placeholder="Enter OTP"><br>
+
+        <button class="verify-btn" onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <p id="msg"></p>
+
+</div>
+
+<script>
+
+async function toggle() {
+    let res = await fetch("/toggle", {method: "POST"});
+    let data = await res.json();
+
+    if (data.status === "blocked") {
+        location.reload();
+    }
+    else if (data.status === "otp_required") {
+        document.getElementById("otpBox").style.display = "block";
+    }
+    else {
+        document.getElementById("msg").innerText = data.error;
+    }
+}
+
+async function sendOTP() {
+    let res = await fetch("/send-otp", {method: "POST"});
+    let data = await res.json();
+
+    document.getElementById("msg").innerText = data.status || data.error;
+}
+
+async function verifyOTP() {
+    let otp = document.getElementById("otp").value;
+
+    let res = await fetch("/verify-otp", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({otp: otp})
+    });
+
+    let data = await res.json();
+
+    if (data.status === "unblocked") {
+        location.reload();
+    } else {
+        document.getElementById("msg").innerText = data.error;
+    }
+}
+
+</script>
+
+</body>
+</html>

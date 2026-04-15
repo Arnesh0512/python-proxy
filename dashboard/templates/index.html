@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Local Proxy Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Local Web Filter</h1>
+    <span class="status">● LIVE</span>
+</header>
+
+<main>
+    <div class="panel">
+        <h2>Traffic Logs</h2>
+        <div id="log"></div>
+
+    </div>
+</main>
+
+<script>
+    const logBox = document.getElementById("log");
+    const ws = new WebSocket("ws://127.0.0.1:9000/ws");
+
+    ws.onmessage = e => {
+        const line = document.createElement("div");
+        line.className = "log-line";
+
+        if (e.data.includes("[BLOCKED]")) {
+            line.classList.add("blocked");
+        } else if (e.data.includes("[ALLOWED]")) {
+            line.classList.add("allowed");
+        }
+
+        line.textContent = e.data;
+        logBox.appendChild(line);
+        logBox.scrollTop = logBox.scrollHeight;
+    };
+</script>
+
+
+</body>
+</html>

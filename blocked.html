@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Access Blocked</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: radial-gradient(circle at top, #1e1e2f, #0a0a12);
+    overflow: hidden;
+}
+
+.overlay {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: rgba(20, 20, 40, 0.95);
+    border-radius: 18px;
+    padding: 40px 50px;
+    width: 620px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+    animation: slideIn 0.8s ease-out;
+    position: relative;
+}
+
+.lock {
+    font-size: 64px;
+    margin-bottom: 15px;
+    animation: shake 2.5s infinite;
+}
+
+h1 {
+    font-size: 38px;
+    margin-bottom: 12px;
+    color: #ff5f5f;
+}
+
+p {
+    font-size: 25px;
+    color: #d0d0ff;
+    margin-bottom: 8px;
+}
+
+.reason {
+    font-size: 23px;
+    color: #9aa3ff;
+    margin-bottom: 25px;
+}
+
+footer {
+    font-size: 21px;
+    color: #888;
+}
+
+.pulse {
+    position: absolute;
+    inset: -8px;
+    border-radius: 22px;
+    border: 2px solid rgba(255, 95, 95, 0.6);
+    animation: pulse 2s infinite;
+}
+
+/* Animations */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 0.15;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes shake {
+    0% { transform: rotate(0deg); }
+    2% { transform: rotate(-5deg); }
+    4% { transform: rotate(5deg); }
+    6% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
+
+</style>
+
+</head>
+<body>
+    <div class="overlay">
+        <div class="card">
+            <div class="lock">
+                🔒
+            </div>
+            <h1>Site Blocked</h1>
+            <p>
+                This website has been blocked by your local content filter.
+            </p>
+            <p class="reason">
+                Reason: Restricted keyword detected
+            </p>
+
+            <div class="pulse"></div>
+
+            <footer>
+                <span>Local Web Filter • Arnesh</span>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
