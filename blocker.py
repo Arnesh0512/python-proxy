@@ -18,7 +18,7 @@ def log(msg):
         pass
 
 
-# 🔹 Allowlist domains (NO blocking here)
+#  Allowlist domains
 ALLOW_DOMAINS = [
     "google.com",
     "github.com",
@@ -26,31 +26,30 @@ ALLOW_DOMAINS = [
     "railway.com"
 ]
 
-# 🔹 Block keywords
+#  Block keywords
 BLOCK_KEYWORDS = [
     "games",
     "reddit",
     "instagram",
-    "shorts",
-    "ads"
+    "shorts"
 ]
 BLOCK_KEYWORDS.extend(blocking)
 BLOCK_KEYWORDS = list(set(BLOCK_KEYWORDS))
 
 
-# 🔹 Build Aho-Corasick automaton
+#  Build Aho-Corasick automaton
 A = ahocorasick.Automaton()
 for word in BLOCK_KEYWORDS:
     A.add_word(word, word)
 A.make_automaton()
 
 
-# 🔹 Load blocked HTML
+#  Load blocked HTML
 with open("C:/blocker/blocked.html", "r", encoding="utf-8") as f:
     HTML = f.read()
 
 
-# 🔹 Helper: check if domain is allowed
+#  Helper: check if domain is allowed
 def is_allowed_domain(url):
     try:
         domain = urlparse(url).netloc.lower()
@@ -70,12 +69,12 @@ def is_allowed_domain(url):
 def request(flow: http.HTTPFlow):
     url = flow.request.pretty_url.lower()
 
-    # ✅ Skip blocking if domain is allowed
+    # Skip blocking if domain is allowed
     if is_allowed_domain(url):
         log(f"[ALLOWLIST] {url}")
         return
 
-    # 🔴 Keyword blocking
+    # Keyword blocking
     for _, keyword in A.iter(url):
         flow.response = http.Response.make(
             200,
